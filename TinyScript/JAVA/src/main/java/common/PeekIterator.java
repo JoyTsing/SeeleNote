@@ -39,7 +39,11 @@ public class PeekIterator<T> implements Iterator<T> {
         return val;
     }
 
-    public void putBack() {
+    //流 --A--B--C--D-->
+    //缓存A->B->C->D
+    //放回C->D(注意push是头接法)
+
+    public void putBack() {//负责管理stackPutBacks的元素添加,把队列倒到栈里面
         if (this.queueCache.size() > 0) {
             this.stackPutBacks.push(this.queueCache.pollLast());
         }
@@ -51,7 +55,7 @@ public class PeekIterator<T> implements Iterator<T> {
     }
 
     @Override
-    public T next() {
+    public T next() {//仅处理queueCache的元素添加
         T val = null;
         if (this.stackPutBacks.size() > 0) {
             val = this.stackPutBacks.pop();
@@ -63,11 +67,12 @@ public class PeekIterator<T> implements Iterator<T> {
             }
             val = it.next();
         }
-
+        //缓存最近十个队列
         while (queueCache.size() > CACHE_SIZE - 1) {
             queueCache.poll();
         }
         queueCache.add(val);
+
         return val;
     }
 }
