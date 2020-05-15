@@ -22,6 +22,10 @@
 感觉状态机可以再化简一下
 ![状态机描述](https://github.com/JoyTsing/SeeleNote/blob/master/TinyScript/pic/4.svg)
 
+词法分析器
+
+![词法分析器](https://github.com/JoyTsing/SeeleNote/blob/master/TinyScript/pic/5.png)
+
 JS版本先暂时鸽着(指还不会JS)，先完成JAVA版本
 
 先上两个轮子哥的相关资料(赶上再看)
