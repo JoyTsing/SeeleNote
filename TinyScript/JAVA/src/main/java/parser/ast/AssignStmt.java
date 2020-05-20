@@ -6,14 +6,14 @@ import parser.util.PeekTokenIterator;
 
 public class AssignStmt extends Stmt {
 
-    public AssignStmt(AstNode parent) {
-        super(parent, AstNodeTypes.ASSIGN_STMT, "assign");
+    public AssignStmt() {
+        super(AstNodeTypes.ASSIGN_STMT, "assign");
     }
 
-    public static AstNode parse(AstNode parent,PeekTokenIterator it) throws ParseException {
-        var stmt = new AssignStmt(parent);
+    public static AstNode parse(PeekTokenIterator it) throws ParseException {
+        var stmt = new AssignStmt();
         var tkn = it.peek();
-        var factor = Factor.parse(parent,it);
+        var factor = Factor.parse(it);
         if(factor == null) {
             throw new ParseException(tkn);
         }

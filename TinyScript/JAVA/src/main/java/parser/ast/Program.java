@@ -5,14 +5,14 @@ import parser.util.PeekTokenIterator;
 
 public class Program extends Block {
 
-    public Program(AstNode parent) {
-        super(parent);
+    public Program() {
+        super();
     }
 
-    public static AstNode parse(AstNode parent, PeekTokenIterator it) throws ParseException {
-        Program block = new Program(parent);
+    public static AstNode parse(PeekTokenIterator it) throws ParseException {
+        Program block = new Program();
         AstNode stmt = null;
-        while ((stmt = Stmt.parseStmt(parent, it)) != null) {
+        while ((stmt = Stmt.parseStmt(it)) != null) {
             block.addChild(stmt);
         }
         return block;

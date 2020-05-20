@@ -1,11 +1,10 @@
 package lexer;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
 public class Keywords {
-    private static String[] keywords={
+    private static String[] keywords = {
             "var",
             "int",
             "float",
@@ -20,9 +19,9 @@ public class Keywords {
             "func",
             "return"
     };
-    static HashSet<String> set=new HashSet<>(Arrays.asList(keywords));
+    static HashSet<String> set = new HashSet<>(Arrays.asList(keywords));
 
-    public static boolean isKeyword(String word){
+    public static boolean isKeyword(String word) {
         return set.contains(word);
     }
 }

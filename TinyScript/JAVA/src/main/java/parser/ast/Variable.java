@@ -6,12 +6,8 @@ import parser.util.PeekTokenIterator;
 public class Variable extends Factor {
     private Token typeLexeme = null;
 
-    public Variable(AstNode parent, PeekTokenIterator it) {
-        super(parent, it);
-    }
-
-    public Variable(AstNode parent, Token token) {
-        super(parent, token);
+    public Variable(Token token) {
+        super(token);
         this.type = AstNodeTypes.VARIABLE;
     }
 

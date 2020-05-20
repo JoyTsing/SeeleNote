@@ -7,26 +7,26 @@ import parser.util.PeekTokenIterator;
 
 public class IfStmt extends Stmt {
 
-    public IfStmt(AstNode parent) {
-        super(parent, AstNodeTypes.IF_STMT, "if");
+    public IfStmt() {
+        super(AstNodeTypes.IF_STMT, "if");
     }
 
-    public static AstNode parse(AstNode parent, PeekTokenIterator it) throws ParseException {
-        return parseIF(parent, it);
+    public static AstNode parse(PeekTokenIterator it) throws ParseException {
+        return parseIF(it);
     }
 
-    public static AstNode parseIF(AstNode parent, PeekTokenIterator it) throws ParseException {
+    public static AstNode parseIF(PeekTokenIterator it) throws ParseException {
         Token lexeme = it.nextMatch("if");
         it.nextMatch("(");
-        IfStmt ifStmt = new IfStmt(parent);
+        IfStmt ifStmt = new IfStmt();
         ifStmt.setLexeme(lexeme);
-        AstNode expr = Expr.parse(parent, it);
+        AstNode expr = Expr.parse(it);
         ifStmt.addChild(expr);
         it.nextMatch(")");
-        AstNode block = Block.parse(parent, it);
+        AstNode block = Block.parse(it);
         ifStmt.addChild(block);
 
-        AstNode tail = parseTail(parent, it);
+        AstNode tail = parseTail(it);
         if (tail != null) {
             ifStmt.addChild(tail);
         }
@@ -34,19 +34,43 @@ public class IfStmt extends Stmt {
     }
 
     // Tail -> else {Block} | else IFStmt | ε
-    public static AstNode parseTail(AstNode parent, PeekTokenIterator it) throws ParseException {
+    public static AstNode parseTail(PeekTokenIterator it) throws ParseException {
         if (!it.hasNext() || !it.peek().getValue().equals("else"))
             return null;
         it.nextMatch("else");
         Token lookahead = it.peek();
 
         if (lookahead.getValue().equals("{")) {
-            return Block.parse(parent, it);
+            return Block.parse(it);
         } else if (lookahead.getValue().equals("if")) {
-            return parseIF(parent, it);
+            return parseIF(it);
         } else
             return null;
     }
 
+    public AstNode getExpr() {
+        return this.getChildren(0);
+    }
+
+    public AstNode getBlock(){
+        return this.getChildren(1);
+    }
+
+    public AstNode getElseBlock(){
+
+        var block = this.getChildren(2);
+        if(block instanceof Block) {
+            return block;
+        }
+        return null;
+    }
+
+    public AstNode getElseIfStmt(){
+        var ifStmt = this.getChildren(2);
+        if(ifStmt instanceof IfStmt) {
+            return ifStmt;
+        }
+        return null;
+    }
 
 }

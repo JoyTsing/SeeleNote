@@ -20,14 +20,14 @@ public class StmtTests {
     @Test
     public void declare() throws LexicalException, ParseException {
         var it = createTokenIt("var i = 100 * 2");
-        var stmt = DeclareStmt.parse(null, it);
+        var stmt = DeclareStmt.parse( it);
         assertEquals(ParserUtils.toPostfixExpression(stmt), "i 100 2 * =");
     }
 
     @Test
     public void assign() throws LexicalException, ParseException {
         var it = createTokenIt("i = 100 * 2");
-        var stmt = AssignStmt.parse(null, it);
+        var stmt = AssignStmt.parse( it);
         assertEquals(ParserUtils.toPostfixExpression(stmt), "i 100 2 * =");
     }
 
@@ -38,7 +38,7 @@ public class StmtTests {
                 "}"
         );
 
-        IfStmt stmt = (IfStmt) IfStmt.parse(null, it);
+        IfStmt stmt = (IfStmt) IfStmt.parse( it);
         var expr = (Variable) stmt.getChildren(0);
         var block = (Block) stmt.getChildren(1);
         var assignStmt = (AssignStmt) block.getChildren(0);
@@ -55,7 +55,7 @@ public class StmtTests {
                 "a = 2\n" +
                 "a = a * 3" +
                 "}");
-        IfStmt stmt = (IfStmt) IfStmt.parse(null, it);
+        IfStmt stmt = (IfStmt) IfStmt.parse( it);
         var expr = (Variable) stmt.getChildren(0);
         var block = (Block) stmt.getChildren(1);
         var assignStmt = (AssignStmt) block.getChildren(0);
@@ -71,7 +71,7 @@ public class StmtTests {
     @Test
     public void function() throws FileNotFoundException, UnsupportedEncodingException, LexicalException, ParseException {
         var tokens = Lexer.fromFile("./example/function.ts");
-        var functionStmt = (FunctionDeclareStmt) Stmt.parseStmt(null, new PeekTokenIterator(tokens.stream()));
+        var functionStmt = (FunctionDeclareStmt) Stmt.parseStmt( new PeekTokenIterator(tokens.stream()));
 
         var args=functionStmt.getArgs();
         assertEquals("a",args.getChildren(0).getLexeme().getValue());
@@ -90,8 +90,12 @@ public class StmtTests {
     @Test
     public void function1() throws FileNotFoundException, UnsupportedEncodingException, LexicalException, ParseException {
         var tokens = Lexer.fromFile("./example/recursion.ts");
-        var functionStmt = (FunctionDeclareStmt) Stmt.parseStmt(null, new PeekTokenIterator(tokens.stream()));
-        functionStmt.print(0);
+        var functionStmt = (FunctionDeclareStmt)Stmt.parseStmt( new PeekTokenIterator(tokens.stream()));
+
+        assertEquals("func fact args block", ParserUtils.toBFSString(functionStmt, 4));
+        assertEquals("args n", ParserUtils.toBFSString(functionStmt.getArgs(), 2));
+        assertEquals("block if return", ParserUtils.toBFSString(functionStmt.getBlock(), 3));
+
     }
 
 

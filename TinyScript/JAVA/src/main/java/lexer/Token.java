@@ -12,53 +12,54 @@ public class Token {
         this._value = value;
     }
 
-    public TokenType getType() {
+    public TokenType getType(){
         return _type;
     }
 
-    public String getValue() {
+    public String getValue(){
         return _value;
     }
 
     @Override
     public String toString() {
-        return String.format("type %s,value %s", _type, _value);
+        return String.format("type %s, value %s", _type, _value);
     }
 
-    public boolean isVariable() {
+    public boolean isVariable(){
         return _type == TokenType.VARIABLE;
     }
 
-    public boolean isScalar() {
+    public boolean isScalar(){
         return _type == TokenType.INTEGER || _type == TokenType.FLOAT ||
                 _type == TokenType.STRING || _type == TokenType.BOOLEAN;
     }
 
+
     /**
      * 提取变量或关键字
-     *
      * @param it
      * @return
      */
     public static Token makeVarOrKeyword(PeekIterator<Character> it) {
         String s = "";
-        while (it.hasNext()) {
-            char lookahead = it.peek();
-            if (AlphabetHelper.isLiteral(lookahead)) {
+
+        while(it.hasNext()) {
+            var lookahead = it.peek();
+            if(AlphabetHelper.isLiteral(lookahead)) {
                 s += lookahead;
             } else {
                 break;
             }
             it.next();
-            //循环不变式
+            // 循环不变式
         }
 
-        //判断关键词或者是变量
-        if (Keywords.isKeyword(s)) {
+        // 判断关键词OR变量
+        if(Keywords.isKeyword(s)) {
             return new Token(TokenType.KEYWORD, s);
         }
 
-        if (s.equals("true") || s.equals("false")) {
+        if(s.equals("true") || s.equals("false")) {
             return new Token(TokenType.BOOLEAN, s);
         }
 
@@ -69,11 +70,11 @@ public class Token {
         String s = "";
         int state = 0;
 
-        while (it.hasNext()) {
+        while(it.hasNext()) {
             char c = it.next();
             switch (state) {
                 case 0:
-                    if (c == '\"') {
+                    if(c == '\"') {
                         state = 1;
                     } else {
                         state = 2;
@@ -81,32 +82,34 @@ public class Token {
                     s += c;
                     break;
                 case 1:
-                    ;
-                    if (c == '"') {
+                    if(c == '"') {
                         return new Token(TokenType.STRING, s + c);
-                    } else {
+                    }
+                    else {
                         s += c;
                     }
                     break;
                 case 2:
-                    if (c == '\'') {
+                    if(c == '\'') {
                         return new Token(TokenType.STRING, s + c);
-                    } else {
+                    }
+                    else {
                         s += c;
                     }
                     break;
             }
-        }//end while
+        } // end while
         throw new LexicalException("Unexpected error");
+
+
     }
 
     public static Token makeOp(PeekIterator<Character> it) throws LexicalException {
         int state = 0;
 
-        while (it.hasNext()) {
-            char lookahead = it.next();
+        while(it.hasNext()) {
+            var lookahead = it.next();
 
-            //一个令人绝望的switch的状态机
             switch (state) {
                 case 0:
                     switch (lookahead) {
@@ -149,45 +152,45 @@ public class Token {
                         case ',':
                             return new Token(TokenType.OPERATOR, ",");
                         case ';':
-                            return new Token(TokenType.OPERATOR, ";");
+                            return new Token(TokenType.OPERATOR,  ";");
                     }
                     break;
                 case 1:
-                    if (lookahead == '+') {
+                    if(lookahead == '+') {
                         return new Token(TokenType.OPERATOR, "++");
-                    } else if (lookahead == '=') {
+                    } else if(lookahead == '=') {
                         return new Token(TokenType.OPERATOR, "+=");
-                    } else {
+                    }else {
                         it.putBack();
                         return new Token(TokenType.OPERATOR, "+");
                     }
                 case 2:
-                    if (lookahead == '-') {
+                    if(lookahead == '-') {
                         return new Token(TokenType.OPERATOR, "--");
-                    } else if (lookahead == '=') {
+                    } else if(lookahead == '=') {
                         return new Token(TokenType.OPERATOR, "-=");
-                    } else {
+                    }else {
                         it.putBack();
                         return new Token(TokenType.OPERATOR, "-");
                     }
                 case 3:
-                    if (lookahead == '=') {
+                    if(lookahead == '=') {
                         return new Token(TokenType.OPERATOR, "*=");
-                    } else {
+                    }else {
                         it.putBack();
                         return new Token(TokenType.OPERATOR, "*");
                     }
                 case 4:
-                    if (lookahead == '=') {
+                    if(lookahead == '=') {
                         return new Token(TokenType.OPERATOR, "/=");
-                    } else {
+                    }else {
                         it.putBack();
                         return new Token(TokenType.OPERATOR, "/");
                     }
                 case 5:
-                    if (lookahead == '=') {
+                    if(lookahead == '=') {
                         return new Token(TokenType.OPERATOR, ">=");
-                    } else if (lookahead == '>') {
+                    }else if(lookahead== '>') {
                         return new Token(TokenType.OPERATOR, ">>");
                     } else {
                         it.putBack();
@@ -195,50 +198,50 @@ public class Token {
 
                     }
                 case 6:
-                    if (lookahead == '=') {
+                    if(lookahead == '=') {
                         return new Token(TokenType.OPERATOR, "<=");
-                    } else if (lookahead == '<') {
+                    }else if(lookahead== '<') {
                         return new Token(TokenType.OPERATOR, "<<");
                     } else {
                         it.putBack();
                         return new Token(TokenType.OPERATOR, "<");
                     }
                 case 7:
-                    if (lookahead == '=') {
+                    if(lookahead == '=') {
                         return new Token(TokenType.OPERATOR, "==");
                     } else {
                         it.putBack();
                         return new Token(TokenType.OPERATOR, "=");
                     }
                 case 8:
-                    if (lookahead == '=') {
+                    if(lookahead == '=') {
                         return new Token(TokenType.OPERATOR, "!=");
                     } else {
                         it.putBack();
                         return new Token(TokenType.OPERATOR, "!");
                     }
                 case 9:
-                    if (lookahead == '&') {
+                    if(lookahead == '&') {
                         return new Token(TokenType.OPERATOR, "&&");
-                    } else if (lookahead == '=') {
+                    }  else if (lookahead == '=') {
                         return new Token(TokenType.OPERATOR, "&=");
                     } else {
                         it.putBack();
                         return new Token(TokenType.OPERATOR, "&");
                     }
                 case 10:
-                    if (lookahead == '|') {
+                    if(lookahead == '|') {
                         return new Token(TokenType.OPERATOR, "||");
-                    } else if (lookahead == '=') {
+                    }  else if (lookahead == '=') {
                         return new Token(TokenType.OPERATOR, "|=");
                     } else {
                         it.putBack();
                         return new Token(TokenType.OPERATOR, "|");
                     }
                 case 11:
-                    if (lookahead == '^') {
+                    if(lookahead == '^') {
                         return new Token(TokenType.OPERATOR, "^^");
-                    } else if (lookahead == '=') {
+                    }  else if (lookahead == '=') {
                         return new Token(TokenType.OPERATOR, "^=");
                     } else {
                         it.putBack();
@@ -255,102 +258,125 @@ public class Token {
 
         }
         throw new LexicalException("Unexpected error");
+
     }
 
     public static Token makeNumber(PeekIterator<Character> it) throws LexicalException {
+
         String s = "";
+
+        // 具体state的定义请查看状态机
         int state = 0;
-        while (it.hasNext()) {
+
+        while(it.hasNext()) {
             char lookahead = it.peek();
 
             switch (state) {
                 case 0:
-                    if (lookahead == '0') {
+                    if(lookahead == '0') {
                         state = 1;
-                    } else if (AlphabetHelper.isNumber(lookahead)) {
+                    } else if(AlphabetHelper.isNumber(lookahead)) {
                         state = 2;
-                    } else if (lookahead == '+' || lookahead == '-') {
+                    } else if(lookahead == '+' || lookahead == '-') {
                         state = 3;
-                    }else if (lookahead == '.') {
+                    } else if (lookahead == '.') {
                         state = 5;
                     }
-                    //这里不抛异常的原因是在传入调用的时候就应该保证符合规范，否则不应调用
                     break;
                 case 1:
-                    if (lookahead == '0') {
+                    if(lookahead == '0') {
                         state = 1;
-                    } else if (AlphabetHelper.isNumber(lookahead)) {
+                    }
+                    else if (AlphabetHelper.isNumber(lookahead)) {
                         state = 2;
                     } else if (lookahead == '.') {
                         state = 4;
-                    } else {
+                    }
+                    else {
                         return new Token(TokenType.INTEGER, s);
                     }
                     break;
                 case 2:
-                    if (AlphabetHelper.isNumber(lookahead)) {
+                    if(AlphabetHelper.isNumber(lookahead)) {
                         state = 2;
-                    } else if (lookahead == '.') {
+                    }
+                    else if(lookahead == '.') {
                         state = 4;
-                    } else {
+                    }
+                    else {
                         return new Token(TokenType.INTEGER, s);
                     }
                     break;
                 case 3:
-                    if (AlphabetHelper.isNumber(lookahead)) {
+                    if(AlphabetHelper.isNumber(lookahead)) {
                         state = 2;
-                    } else if (lookahead == '.') {
+                    } else if(lookahead == '.') {
                         state = 5;
                     } else {
                         throw new LexicalException(lookahead);
                     }
                     break;
                 case 4:
-                    if (lookahead == '.') {
+                    if(lookahead == '.') {
                         throw new LexicalException(lookahead);
-                    } else if (AlphabetHelper.isNumber(lookahead)) {
+                    }
+                    else if(AlphabetHelper.isNumber(lookahead)) {
                         state = 20;
-                    } else {
+                    }
+                    else {
                         return new Token(TokenType.FLOAT, s);
                     }
                     break;
                 case 5:
-                    if (AlphabetHelper.isNumber(lookahead)) {
+                    if(AlphabetHelper.isNumber(lookahead)) {
                         state = 20;
-                    } else {
+                    }
+                    else {
                         throw new LexicalException(lookahead);
                     }
                     break;
                 case 20:
-                    if (AlphabetHelper.isNumber(lookahead)) {
+                    if(AlphabetHelper.isNumber(lookahead)) {
                         state = 20;
-                    } else if (lookahead == '.') {
+                    }
+                    else if(lookahead == '.') {
                         throw new LexicalException(lookahead);
-                    } else {
+                    }
+                    else {
                         return new Token(TokenType.FLOAT, s);
                     }
 
             }
 
-            s += lookahead;
             it.next();
+            s += lookahead;
         }
         throw new LexicalException("Unexpected error");
     }
 
-    public boolean isNumber(){
-        return this._type==TokenType.INTEGER||this._type==TokenType.FLOAT;
+
+    public boolean isNumber() {
+        return this._type == TokenType.INTEGER || this._type == TokenType.FLOAT;
     }
 
-    public boolean isOperator(){
-        return this._type==TokenType.OPERATOR;
+    public boolean isOperator() {
+        return this._type == TokenType.OPERATOR;
+    }
+
+    public boolean isPostUnaryOperator() {
+        return this._value.equals("++") || this._value.equals("--");
     }
 
     public boolean isType() {
-        return  this._value.equals("bool")||
-                this._value.equals("int")||
-                this._value.equals("float")||
-                this._value.equals("void")||
-                this._value.equals("string");
+        return this._value.equals("bool")
+                || this._value.equals("int")
+                || this._value.equals("float")
+                || this._value.equals("void")
+                || this._value.equals("string");
+
+    }
+
+    public boolean isValue() {
+        return isVariable() || isScalar();
     }
 }

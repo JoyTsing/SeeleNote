@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 public class Lexer {
 
     public ArrayList<Token> analyse(Stream source) throws LexicalException {
-        var it = new PeekIterator<Character>(source, (char)0);
+        var it = new PeekIterator<Character>(source, (char) 0);
         return this.analyse(it);
     }
 
@@ -36,8 +36,10 @@ public class Lexer {
             //删除注释
             if (c == '/') {
                 if (lookahead == '/') {
-                    while (it.hasNext() && (c = it.next()) != '\n') ;
+                    while (it.hasNext() && (c = it.next()) != '\n'){};
+                    continue;
                 } else if (lookahead == '*') {
+                    it.next();//多读一个* 避免/*/通过
                     boolean valid = false;
                     while (it.hasNext()) {
                         char p = it.next();
@@ -79,12 +81,12 @@ public class Lexer {
                 continue;
             }
 
-            //+ - .
-            //+- 3+6 +6 3 * -5 3.5
             if ((c == '+' || c == '-' || c == '.') && AlphabetHelper.isNumber(lookahead)) {
                 Token lastToken = tokens.size() == 0 ? null : tokens.get(tokens.size() - 1);
 
-                if (lastToken == null || !lastToken.isNumber() || lastToken.isOperator()) {
+                //到后面不一定是数字 而是变量或者是表达式 这个isValue花了3个小时找bug
+                //这里还有些疑惑和问题
+                if (lastToken == null || !lastToken.isValue() || lastToken.isOperator()) {
                     it.putBack();
                     tokens.add(Token.makeNumber(it));
                     continue;

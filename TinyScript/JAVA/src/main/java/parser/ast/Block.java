@@ -6,15 +6,15 @@ import parser.util.PeekTokenIterator;
 
 public class Block extends Stmt {
 
-    public Block(AstNode parent) {
-        super(parent, AstNodeTypes.BLOCK, "BLOCK");
+    public Block() {
+        super(AstNodeTypes.BLOCK, "block");
     }
 
-    public static AstNode parse(AstNode parent, PeekTokenIterator it) throws ParseException {
+    public static AstNode parse(PeekTokenIterator it) throws ParseException {
         it.nextMatch("{");
-        Block block = new Block(parent);
+        Block block = new Block();
         AstNode stmt = null;
-        while ((stmt = Stmt.parseStmt(parent, it)) != null) {
+        while ((stmt = Stmt.parseStmt(it)) != null) {
             block.addChild(stmt);
         }
         it.nextMatch("}");
