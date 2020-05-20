@@ -39,3 +39,23 @@ JS版本先暂时鸽着(指还不会JS)，先完成JAVA版本
 ## 抽象语法树
 
 ![抽象语法树](https://github.com/JoyTsing/SeeleNote/blob/master/TinyScript/pic/6.png)
+
+## 总体结构
+
+![程序运行](https://github.com/JoyTsing/SeeleNote/blob/master/TinyScript/pic/7.png)
+
+声明变量
+
+![声明变量](https://github.com/JoyTsing/SeeleNote/blob/master/TinyScript/pic/8.png)
+
+变量赋值
+
+![变量赋值](https://github.com/JoyTsing/SeeleNote/blob/master/TinyScript/pic/9.png)
+
+if语句
+
+![if语句](https://github.com/JoyTsing/SeeleNote/blob/master/TinyScript/pic/10.png)
+
+函数的定义
+
+![函数](https://github.com/JoyTsing/SeeleNote/blob/master/TinyScript/pic/11.png)

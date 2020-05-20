@@ -345,4 +345,12 @@ public class Token {
     public boolean isOperator(){
         return this._type==TokenType.OPERATOR;
     }
+
+    public boolean isType() {
+        return  this._value.equals("bool")||
+                this._value.equals("int")||
+                this._value.equals("float")||
+                this._value.equals("void")||
+                this._value.equals("string");
+    }
 }

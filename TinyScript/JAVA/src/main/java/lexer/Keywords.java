@@ -7,6 +7,11 @@ import java.util.HashSet;
 public class Keywords {
     private static String[] keywords={
             "var",
+            "int",
+            "float",
+            "bool",
+            "void",
+            "string",
             "if",
             "else",
             "for",
