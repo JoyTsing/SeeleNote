@@ -27,6 +27,9 @@ public abstract class AstNode {
     }
 
     public AstNode getChildren(int index) {
+        if(index >= this.children.size()) {
+            return null;
+        }
         return this.children.get(index);
     }
 
@@ -91,5 +94,9 @@ public abstract class AstNode {
 
     public String getLabel() {
         return label;
+    }
+
+    public AstNodeTypes getType() {
+        return type;
     }
 }

@@ -60,6 +60,7 @@ public class PeekIterator<T> implements Iterator<T> {
         if (this.stackPutBacks.size() > 0) {
             val = this.stackPutBacks.pop();
         } else {
+
             if (!this.it.hasNext()) {
                 T tmp = _endToken;
                 _endToken = null;

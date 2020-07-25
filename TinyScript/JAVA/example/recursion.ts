@@ -1,4 +1,4 @@
-func fact(int n) int {
+func fact(int n)  int {
   if(n == 0) {
     return 1
   }

@@ -16,17 +16,17 @@ public class IfStmt extends Stmt {
     }
 
     public static AstNode parseIF(PeekTokenIterator it) throws ParseException {
-        Token lexeme = it.nextMatch("if");
+        var  lexeme = it.nextMatch("if");
         it.nextMatch("(");
-        IfStmt ifStmt = new IfStmt();
+        var  ifStmt = new IfStmt();
         ifStmt.setLexeme(lexeme);
-        AstNode expr = Expr.parse(it);
+        var  expr = Expr.parse(it);
         ifStmt.addChild(expr);
         it.nextMatch(")");
-        AstNode block = Block.parse(it);
+        var  block = Block.parse(it);
         ifStmt.addChild(block);
 
-        AstNode tail = parseTail(it);
+        var tail = parseTail(it);
         if (tail != null) {
             ifStmt.addChild(tail);
         }
